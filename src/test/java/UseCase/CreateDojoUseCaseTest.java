@@ -23,39 +23,47 @@ import static org.mockito.Mockito.verify;
 
 class CreateDojoUseCaseTest extends UseCaseHandleBaseTest {
     @Test
-    void createDojo_case(){
+    void createDojo_case() {
         List<Rule> rules = new ArrayList<>();
+
         rules.add(new Rule("Rule 1"));
         rules.add(new Rule("Rule 2"));
-        var useCase = new CreateDojoUseCase();
-        var command = new CreateDojoCommand(IdDojo.of("001"),
-                new DataInfo("Dojo1", "This is awesome dojo"),
-                Status.OPEN, rules,
-                new GroupGit(100,
-                new PathGroupGit("Way Path"), new NameGroupGit("NameGroupGit")),
-                new Location("www.meet.dojo.com", "Meet",
-                        "This is a description",
-                        new OpeningHours(10, 22, Frecuency.MONTHLY)));
+
+        DataInfo dataInfo = new DataInfo("Dojo1",
+                "This is awesome dojo");
+
+        GroupGit groupGit = new GroupGit(100,
+                new PathGroupGit("Way Path"),
+                new NameGroupGit("NameGroupGit"));
+
+        Location location = new Location("www.meet.dojo.com",
+                "Meet",
+                "This is a description",
+                new OpeningHours(10,
+                        22,
+                        Frecuency.MONTHLY));
+
+        CreateDojoUseCase useCase = new CreateDojoUseCase();
+        CreateDojoCommand command = new CreateDojoCommand(IdDojo.of("001"),
+                dataInfo,
+                //Status.OPEN,
+                rules,
+                groupGit,
+                location);
+
         UseCaseHandler.getInstance()
-                .setIdentifyExecutor("HelloWorld")
-                .asyncExecutor(useCase, new RequestCommand<>(command))
+                //.setIdentifyExecutor("HelloWorld")
+                .asyncExecutor(useCase,
+                        new RequestCommand<>(command))
                 .subscribe(subscriber);
 
-        verify(subscriber,times(1)).onNext(eventCaptor.capture());
+        verify(subscriber,
+                times(1)).onNext(eventCaptor.capture());
 
-        var event = (CreatedDojo)eventCaptor.getAllValues().get(0);
+        CreatedDojo event = (CreatedDojo)eventCaptor.getAllValues().get(0);
         Assertions.assertEquals("001", event.getEntityId().value());
-        /*Assertions.assertEquals(1,eventCaptor.getAllValues());
-
-        CreatedDojo createdDojo = (CreatedDojo) eventCaptor.getAllValues().get(0);*/
-        System.out.println(event.getEntityId().value());
-        System.out.println(event.getDataInfo().getClass());
-        System.out.println(event.getDataInfo().toString());
-        System.out.println(event.getDataInfo().value());
-        System.out.println("Hola Hola");
-        System.out.println(event.getGroupGit().value());
-        System.out.println(event.getRules());
-        System.out.println(event.getStatus());
+        Assertions.assertEquals("Dojo1", event.getDataInfo().getName()); //event.getDataInfo().value().name()
+        Assertions.assertEquals("This is awesome dojo", event.getDataInfo().getLegend());//event.getDataInfo().value().legend()
 
 
     }

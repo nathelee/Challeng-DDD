@@ -20,15 +20,11 @@ public class CreateDojoCommand implements Command {
     private GroupGit groupGit;
     private Location location;
 
-    public CreateDojoCommand(){
-
-    }
-
-    public CreateDojoCommand(IdDojo idDojo, DataInfo dataInfo, Status status,
+    public CreateDojoCommand(IdDojo idDojo, DataInfo dataInfo,
                              List<Rule> rules, GroupGit groupGit, Location location) {
         this.idDojo = idDojo;
         this.dataInfo = dataInfo;
-        this.status = status;
+        //this.status = status;
         this.rules = rules;
         this.groupGit = groupGit;
         this.location = location;
